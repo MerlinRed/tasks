@@ -1,31 +1,44 @@
 let list = document.querySelector('.todo-list')
-let input = document.querySelector('.todo-input')
-let form = document.querySelector('.todo-form')
+let inputPost = document.querySelector('.todo-input')
+let formPost = document.querySelector('.todo-post')
 
-const url = 'http://127.0.0.1:5000/'
-const headers = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-}
 
-function fetchGet() {
-    return fetch(url, {
-        method: 'GET',
-        headers: headers,
-        mode: 'no-cors',
+const url = 'http://localhost:5000/'
+
+
+async function fetchPost(body) {
+    const response = await fetch(url, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
     })
-        .then(response => {
-            return response.json()
-        })
+    return await response.json()
 }
 
-//используется стрелочная функция
-form.onsubmit = event => {
+window.onload = () => {
+    fetch(url, {method: 'get'}).then(data => {
+        data.json().then(data => {
+            let all_data = Array(data)[0]['data']
+            for (let task of all_data) {
+                let newTask = document.createElement('li')
+                newTask.textContent = task
+                list.append(newTask)
+                inputPost.value = ''
+            }
+        })
+    })
+}
+
+formPost.onsubmit = event => {
     let newTask = document.createElement('li')
     event.preventDefault()
-    newTask.textContent = input.value
+    let value = inputPost.value
+    newTask.textContent = value
     list.append(newTask)
-    input.value = ''
-    //используется запрос на сайт
-    fetchGet().then(data => console.log(data))
+    let body = {
+        name: 'Jo',
+        description: value
+    }
+    fetchPost(body).then(data => console.log(data))
+    inputPost.value = ''
 }

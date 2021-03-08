@@ -1,26 +1,36 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
+
+from database import DataBaseWork
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @app.route('/', methods=['GET'])
+@cross_origin()
 def get():
-    return jsonify({'Method': 'GET'})
+    data = DataBaseWork.select_data_from_db()
+    return jsonify({'data': [tasks[1] for tasks in data]})
 
 
 @app.route('/', methods=['POST'])
+@cross_origin()
 def post():
-    return jsonify({'Method': 'POST'}), 201
+    content = request.get_json()
+    data = DataBaseWork.insert_data_in_db(description=content['description'])
+    return jsonify({'method': data}), 201
 
 
-# @app.route('todo/api/v1.0/tasks/<int:put_id>', methods=['PUT'])
 @app.route('/', methods=['PUT'])
+@cross_origin()
 def put():
     return jsonify({'Method': 'PUT'})
 
 
-# @app.route('todo/api/v1.0/tasks/<int:delete_id>', methods=['DELETE'])
 @app.route('/', methods=['DELETE'])
+@cross_origin()
 def delete():
     return jsonify({'Method': 'DELETE'})
 
