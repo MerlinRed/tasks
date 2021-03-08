@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage("update project") {
             steps {
-                sh 'cd /home/tele/site && git pull'
+                sh 'cd /home/tele/site/tasks && git pull'
             }
         }
     }
