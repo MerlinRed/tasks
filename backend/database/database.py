@@ -10,7 +10,7 @@ class DataBase:
 
     def create_db(self):
         self.__cursor.execute("""CREATE TABLE IF NOT EXISTS tasks(
-                                tasks_id serial,
+                                tasks_id int GENERATED ALWAYS AS IDENTITY (start with 1) NOT NULL,
                                 description text NOT NULL,
                                 PRIMARY KEY (tasks_id))
                             """)
@@ -23,7 +23,7 @@ class DataBase:
     def select_data_from_db(self):
 
         try:
-            self.__cursor.execute("""SELECT * FROM tasks""")
+            self.__cursor.execute("""SELECT * FROM tasks ORDER BY tasks_id ASC""")
             self.__connection.commit()
             fetch = self.__cursor.fetchall()
             data = [task for task in fetch]
@@ -31,13 +31,13 @@ class DataBase:
         except InFailedSqlTransaction:
             self.__connection.rollback()
 
-    def delete_data_from_db(self, description):
-        self.__cursor.execute("""DELETE FROM tasks WHERE description = %s """, (description,))
+    def delete_data_from_db(self, tasks_id):
+        self.__cursor.execute("""DELETE FROM tasks WHERE tasks_id = %s """, (tasks_id,))
         self.__connection.commit()
 
-    def update_data_in_db(self, new_description, old_description):
-        self.__cursor.execute("""UPDATE tasks SET description = %s WHERE description = %s""",
-                              (new_description, old_description))
+    def update_data_in_db(self, new_description, tasks_id):
+        self.__cursor.execute("""UPDATE tasks SET description = %s WHERE tasks_id = %s""",
+                              (new_description, tasks_id))
         self.__connection.commit()
 
 

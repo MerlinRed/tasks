@@ -12,7 +12,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @cross_origin()
 def get():
     data = DataBaseWork.select_data_from_db()
-    return jsonify({'data': [tasks[1] for tasks in data]})
+    return jsonify({'data': [tasks for tasks in data]})
 
 
 @app.route('/', methods=['POST'])
@@ -26,13 +26,17 @@ def post():
 @app.route('/', methods=['PUT'])
 @cross_origin()
 def put():
-    return jsonify({'Method': 'PUT'})
+    content = request.get_json()
+    data = DataBaseWork.update_data_in_db(new_description=content['description'], tasks_id=content['tasks_id'])
+    return jsonify({'Method': data})
 
 
 @app.route('/', methods=['DELETE'])
 @cross_origin()
 def delete():
-    return jsonify({'Method': 'DELETE'})
+    content = request.get_json()
+    data = DataBaseWork.delete_data_from_db(tasks_id=content['tasks_id'])
+    return jsonify({'Method': data})
 
 
 if __name__ == '__main__':
