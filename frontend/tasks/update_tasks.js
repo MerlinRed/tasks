@@ -14,6 +14,17 @@ const url = 'http://localhost:5000/'
 let idAndDescription = []
 
 
+function fetchGet() {
+    fetch(url, {method: 'get'}).then(data => {
+        data.json().then(data => {
+            let all_data = Array(data)[0]['data']
+            for (let task of all_data) {
+                idAndDescription.push(task)
+            }
+        })
+    })
+}
+
 async function fetchPost(body) {
     const response = await fetch(url, {
         method: 'post',
@@ -56,6 +67,7 @@ window.onload = () => {
     })
 }
 
+
 formPost.onsubmit = event => {
     event.preventDefault()
     let newTask = document.createElement('li')
@@ -74,10 +86,13 @@ formPut.onsubmit = event => {
     let tagLiDescription = document.querySelectorAll('li')
     for (let desc of idAndDescription) {
         if (desc[1] === tagLiDescription.item(tasksId).textContent) {
+            tagLiDescription.item(tasksId).textContent = description
             let body = {description: description, tasks_id: desc[0]}
             fetchPut(body).then(data => console.log(data))
+                .catch(error => console.log(`Error from Put ${error}`))
         }
     }
+    fetchGet()
 }
 
 formDelete.onsubmit = event => {
@@ -86,9 +101,11 @@ formDelete.onsubmit = event => {
     let tagLiDescription = document.querySelectorAll('li')
     for (let desc of idAndDescription) {
         if (desc[1] === tagLiDescription.item(tasksId).textContent) {
-            console.log(desc[1])
+            tagLiDescription.item(tasksId).remove()
             let body = {tasks_id: desc[0]}
             fetchDelete(body).then(data => console.log(data))
+                .catch(error => console.log(`Error from Delete ${error}`))
         }
     }
+    fetchGet()
 }

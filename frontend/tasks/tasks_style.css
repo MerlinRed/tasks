@@ -1,3 +1,7 @@
+.selector-for-some-widget {
+    box-sizing: content-box;
+}
+
 body {
     background-color: #a3e4ff;
     background-image: url("https://million-wallpapers.ru/wallpapers/6/34/490010652699558/les-osenyu-cveta.jpg");
@@ -23,14 +27,20 @@ li {
     font-weight: bold;
 }
 
+.todo-post {
+    margin-left: 160px;
+    padding-top: 10px;
+}
+
 .todo-put {
-    margin-right: 110px;
+    margin-right: 35px;
     padding-top: 10px;
 }
 
 .todo-delete {
-    margin-right: 100px;
+    margin-left: 140px;
     padding-top: 10px;
+    padding-bottom: 15px;
 }
 
 label {
