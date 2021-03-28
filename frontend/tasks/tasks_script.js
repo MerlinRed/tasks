@@ -13,9 +13,12 @@ const url = 'http://localhost:5000/'
 
 let idAndDescription = []
 
+let userId;
+
 
 function fetchGet() {
-    fetch(url, {method: 'get'}).then(data => {
+    fetch(url, {
+        method: 'get'}).then(data => {
         data.json().then(data => {
             let all_data = Array(data)[0]['data']
             for (let task of all_data) {
@@ -23,6 +26,7 @@ function fetchGet() {
             }
         })
     })
+
 }
 
 async function fetchPost(body) {
@@ -37,23 +41,31 @@ async function fetchPost(body) {
 async function fetchPut(body) {
     const response = await fetch(url, {
         method: 'put',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify(body)
     })
     return await response.json()
 }
+
 
 async function fetchDelete(body) {
     const response = await fetch(url, {
         method: 'delete',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify(body)
     })
     return await response.json()
 }
 
+
 window.onload = () => {
-    fetch(url, {method: 'get'}).then(data => {
+    let body = {
+        get: true,
+    }
+     fetch(url, {
+         method: 'post',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(body)}).then(data => {
         data.json().then(data => {
             let all_data = Array(data)[0]['data']
             for (let task of all_data) {
@@ -63,6 +75,7 @@ window.onload = () => {
                 list.append(newTask)
                 inputPost.value = ''
             }
+            userId = data['users_id']
         })
     })
 }
@@ -74,8 +87,13 @@ formPost.onsubmit = event => {
     let value = inputPost.value
     newTask.textContent = value
     list.append(newTask)
-    let body = {description: value}
+    let body = {
+        description: value,
+        get: false,
+        users_id: userId
+    }
     fetchPost(body).then(data => console.log(data))
+        .catch(error => console.log(`Error POST request ${error}`))
     inputPost.value = ''
 }
 
@@ -87,9 +105,12 @@ formPut.onsubmit = event => {
     for (let desc of idAndDescription) {
         if (desc[1] === tagLiDescription.item(tasksId).textContent) {
             tagLiDescription.item(tasksId).textContent = description
-            let body = {description: description, tasks_id: desc[0]}
+            let body = {
+                description: description,
+                tasks_id: desc[0]
+            }
             fetchPut(body).then(data => console.log(data))
-                .catch(error => console.log(`Error from Put ${error}`))
+                .catch(error => console.log(`Error Put request ${error}`))
         }
     }
     fetchGet()
@@ -104,7 +125,7 @@ formDelete.onsubmit = event => {
             tagLiDescription.item(tasksId).remove()
             let body = {tasks_id: desc[0]}
             fetchDelete(body).then(data => console.log(data))
-                .catch(error => console.log(`Error from Delete ${error}`))
+                .catch(error => console.log(`Error Delete request ${error}`))
         }
     }
     fetchGet()

@@ -1,1 +1,2 @@
-from .database import DataBaseWork
+from .tasks_db import TasksDB
+from .users_db import UsersDB
