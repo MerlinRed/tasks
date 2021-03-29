@@ -17,28 +17,38 @@ class TasksDataBase:
                             """)
         self.__connection.commit()
 
-    def insert_data_in_db(self, description, users_id):
+    def insert_data_in_db(self, description: str, users_id: int):
         self.__cursor.execute("""INSERT INTO tasks (description, users_id) VALUES (%s, %s) """, (description, users_id))
         self.__connection.commit()
 
-    def select_data_from_db(self, users_id):
+    def select_data_from_db(self, users_id: int):
 
         try:
-            self.__cursor.execute(
-                """SELECT tasks_id, description FROM tasks WHERE users_id = %s ORDER BY tasks_id ASC""",
-                (users_id,))
+            self.__cursor.execute("""SELECT admin_site FROM users WHERE users_id =  %s""", (users_id,))
             self.__connection.commit()
+            fetch = self.__cursor.fetchone()
+            data = None if fetch is None else fetch[0]
+            if data:
+                self.__cursor.execute(
+                    """SELECT tasks_id, description FROM tasks ORDER BY tasks_id ASC""",
+                    (users_id,))
+                self.__connection.commit()
+            else:
+                self.__cursor.execute(
+                    """SELECT tasks_id, description FROM tasks WHERE users_id = %s ORDER BY tasks_id ASC""",
+                    (users_id,))
+                self.__connection.commit()
             fetch = self.__cursor.fetchall()
             data = [task for task in fetch]
             return data
         except InFailedSqlTransaction:
             self.__connection.rollback()
 
-    def delete_data_from_db(self, tasks_id):
+    def delete_data_from_db(self, tasks_id: int):
         self.__cursor.execute("""DELETE FROM tasks WHERE tasks_id = %s""", (tasks_id,))
         self.__connection.commit()
 
-    def update_data_in_db(self, new_description, tasks_id):
+    def update_data_in_db(self, new_description: str, tasks_id: int):
         self.__cursor.execute("""UPDATE tasks SET description = %s WHERE tasks_id = %s""",
                               (new_description, tasks_id))
         self.__connection.commit()

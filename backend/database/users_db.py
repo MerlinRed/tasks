@@ -1,21 +1,6 @@
 import psycopg2
 from psycopg2.errors import InFailedSqlTransaction
 
-"""
-непонятно как будут связываться записи с пользователями
-какой таблице делать FOREIGN KEY
-
-если сделать таблице tasks на users_id, получается при новой вставке задач
-они должны будут как-то отражаться на таблицу users, чтобы понимать чьи это задачи
-
-отношение один ко многим, один юзер к нескольким записям
-при входе на сайт, надо делать проверку на id пользователя, и выдавать
-задачи по колонке users_id, колонке которая связывает 2 таблицы
-"""
-
-
-# superadmin может видеть все записи, добавляет админов и юзеров и записи, их же может удалять, записи у всех удалять
-# admin может видеть все записи, добавлять юзеров и записи, их же может и удалять
 
 class UsersDataBase:
 
@@ -35,32 +20,71 @@ class UsersDataBase:
                             """)
         self.__connection.commit()
 
-    def registration(self, login, password, user=False, admin=False, super_admin=False):
-        self.__cursor.execute("""INSERT INTO users (login, password, user_site, admin_site, super_admin) 
-                                 VALUES (%s, %s, %s, %s, %s) """,
-                              (login, password, user, admin, super_admin))
+    def registration(self, login: str, password: str, user: bool):
+        self.__cursor.execute("""INSERT INTO users (login, password, user_site) VALUES (%s, %s, %s) """,
+                              (login, password, user,))
         self.__connection.commit()
 
-    def select_data_from_db(self, login, password):
+    def registration_super_user(self, login: str, password: str, user: bool, admin: bool,
+                                super_admin: bool):
+        self.__cursor.execute("""SELECT super_admin FROM users WHERE super_admin = true""")
+        self.__connection.commit()
+        fetch = self.__cursor.fetchone()
+        data = None if fetch is None else fetch[0]
+        if data:
+            print('Супер Админ уже есть')
+        else:
+            self.__cursor.execute("""INSERT INTO users (login, password, user_site, admin_site, super_admin) 
+                                     VALUES (%s, %s, %s, %s, %s) """,
+                                  (login, password, user, admin, super_admin))
+            self.__connection.commit()
+
+    def select_user(self, login: str, password: str):
 
         try:
-            self.__cursor.execute("""SELECT users_id FROM users WHERE login = %s and password = %s""",
+            self.__cursor.execute("""SELECT users_id, admin_site FROM users WHERE login = %s and password = %s""",
                                   (login, password))
             self.__connection.commit()
             fetch = self.__cursor.fetchone()
-            data = None if fetch is None else fetch[0]
+            data = None if fetch is None else fetch
             return data
         except InFailedSqlTransaction:
             self.__connection.rollback()
 
-    # def delete_data_from_db(self, tasks_id):
-    #     self.__cursor.execute("""DELETE FROM tasks WHERE tasks_id = %s """, (tasks_id,))
-    #     self.__connection.commit()
-    #
-    # def update_data_in_db(self, new_description, tasks_id):
-    #     self.__cursor.execute("""UPDATE tasks SET description = %s WHERE tasks_id = %s""",
-    #                           (new_description, tasks_id))
-    #     self.__connection.commit()
+    def select_all_users(self, users_id: int):
+
+        try:
+            self.__cursor.execute("""SELECT admin_site FROM users WHERE super_admin = false and users_id = %s""",
+                                  (users_id,))
+            self.__connection.commit()
+            fetch = self.__cursor.fetchone()
+            data = None if fetch is None else fetch[0]
+            if data:
+                self.__cursor.execute(
+                    """SELECT users_id, login FROM users WHERE super_admin = false and admin_site = false""", )
+                self.__connection.commit()
+                fetch = self.__cursor.fetchall()
+                data = [users for users in fetch]
+                return data
+            else:
+                self.__cursor.execute(
+                    """SELECT users_id, login FROM users WHERE super_admin = false ORDER BY users_id ASC""")
+                self.__connection.commit()
+                fetch = self.__cursor.fetchall()
+                data = [users for users in fetch]
+                return data
+        except InFailedSqlTransaction:
+            self.__connection.rollback()
+
+    def delete_user(self, users_id: int):
+        self.__cursor.execute("""DELETE FROM tasks WHERE users_id = %s """, (users_id,))
+        self.__cursor.execute("""DELETE FROM users WHERE users_id = %s """, (users_id,))
+        self.__connection.commit()
+
+    def update_users_to_admin(self, login: str):
+        self.__cursor.execute("""UPDATE users SET admin_site = true WHERE user_site = true and login = %s""",
+                              (login,))
+        self.__connection.commit()
 
 
 UsersDB = UsersDataBase()
