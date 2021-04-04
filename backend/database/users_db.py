@@ -1,6 +1,8 @@
 import psycopg2
 from psycopg2.errors import InFailedSqlTransaction
 
+from tasks.backend.config.create_hash_from_password import hash_password
+
 
 class UsersDataBase:
 
@@ -21,6 +23,7 @@ class UsersDataBase:
         self.__connection.commit()
 
     def registration(self, login: str, password: str, user: bool):
+        password = hash_password(password)
         self.__cursor.execute("""INSERT INTO users (login, password, user_site) VALUES (%s, %s, %s) """,
                               (login, password, user,))
         self.__connection.commit()
@@ -34,6 +37,7 @@ class UsersDataBase:
         if data:
             print('Супер Админ уже есть')
         else:
+            password = hash_password(password)
             self.__cursor.execute("""INSERT INTO users (login, password, user_site, admin_site, super_admin) 
                                      VALUES (%s, %s, %s, %s, %s) """,
                                   (login, password, user, admin, super_admin))
@@ -42,6 +46,7 @@ class UsersDataBase:
     def select_user(self, login: str, password: str):
 
         try:
+            password = hash_password(password)
             self.__cursor.execute("""SELECT users_id, admin_site FROM users WHERE login = %s and password = %s""",
                                   (login, password))
             self.__connection.commit()
@@ -54,12 +59,7 @@ class UsersDataBase:
     def select_all_users(self, users_id: int):
 
         try:
-            self.__cursor.execute("""SELECT admin_site FROM users WHERE super_admin = false and users_id = %s""",
-                                  (users_id,))
-            self.__connection.commit()
-            fetch = self.__cursor.fetchone()
-            data = None if fetch is None else fetch[0]
-            if data:
+            if users_id != 1:
                 self.__cursor.execute(
                     """SELECT users_id, login FROM users WHERE super_admin = false and admin_site = false""", )
                 self.__connection.commit()
@@ -83,6 +83,13 @@ class UsersDataBase:
 
     def update_users_to_admin(self, login: str):
         self.__cursor.execute("""UPDATE users SET admin_site = true WHERE user_site = true and login = %s""",
+                              (login,))
+        self.__connection.commit()
+
+    def remove_from_admins(self, login: str):
+        if login == 'admin':
+            return 'Супер админа нельзя разжаловать'
+        self.__cursor.execute("""UPDATE users SET admin_site = false WHERE login = %s""",
                               (login,))
         self.__connection.commit()
 

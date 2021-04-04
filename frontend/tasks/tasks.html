@@ -1,48 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
     <link rel="stylesheet" href="tasks_style.css">
     <title>Дневник</title>
 </head>
 <body>
-<div class="container">
-    <h1 class="tasks-list">Список задач</h1>
+    <div class="container">
+        
+        <h1 class="tasks-list">Список задач</h1>
 
-    <div class="row">
-        <div class="col-md-4"></div>
-        <ol class="todo-list col-md-4"></ol>
-        <div class="col-md-4"></div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <ol class="todo-list col-md-4"></ol>
+            <div class="col-md-4"></div>
+        </div>
+
+        <form class="todo-post">
+            <input type="text" class="todo-input-post" id="todo-input-post" placeholder="    Добавьте задачу" required>
+            <button class="btn btn-primary button-post" type="submit">Добавить в список</button>
+        </form>
+
     </div>
 
-    <form class="todo-post">
-        <input type="text" class="todo-input-post" id="todo-input-post" placeholder="    Добавьте задачу" required>
-        <button class="button-post" type="submit">Добавить в список</button>
-    </form>
+    <!-- Modal -->
+    <div class="modal fade modal-window" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title task-index" id="exampleModalLabel">Title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="todo-input-text">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-save" data-dismiss="modal">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <form class="todo-put">
-        <input type="text" class="todo-input-put-id" id="todo-input-put-id" placeholder="    Номер задачи" required>
-        <input type="text" class="todo-input-put-desc" id="todo-input-put-desc" placeholder="    Новый текст" required>
-        <button class="button-put" type="submit">Обновить задачу</button>
-    </form>
+    <template id="users-template">
+        <li class="list-user">
+            <label>
+                <span class='todo-text'></span>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary btn-put" data-toggle="modal" data-target="#exampleModal" style="background-color:greenyellow;">
+                    &#128396;
+                </button>
+                <button type="button" class="btn btn-secondary btn-delete" data-dismiss="modal">
+                    &#128465;
+                </button>
+            </label>
+        </li>
+    </template>
 
-    <form class="todo-delete">
-        <input type="text" class="todo-input-delete" id="todo-input-delete" placeholder="    Номер задачи" required>
-        <button class="button-delete" type="submit">Удалить задачу</button>
-    </form>
-
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
-        integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
-        integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
-        crossorigin="anonymous"></script>
-<script src="tasks_script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <script src="tasks_script.js"></script>
 </body>
 </html>

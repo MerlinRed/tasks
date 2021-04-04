@@ -20,20 +20,21 @@ async function requestToServer(body, method) {
     return await response.json()
 }
 
-formRegistration.onsubmit = (evt) => {
-    evt.preventDefault()
+formRegistration.onsubmit = (event) => {
+    event.preventDefault()
     let body = {
         login: loginReg.value,
         password: passwordReg.value,
         user: true,
     }
-    requestToServer(body, "post")
+    requestToServer(body, "post").then((data) => console.log(data))
 }
 
-formEnter.onsubmit = (evt) => {
-    evt.preventDefault()
+formEnter.onsubmit = (event) => {
+    event.preventDefault()
     let href =
-        "http://localhost:63342/package-lock.json/%D0%9A%D0%9E%D0%94/fullstack_project/tasksList/tasks/frontend/tasks/tasks.html?_ijt=u4djoe8qnnmprel5nbopdspnm7"
+        "http://localhost:63342/package-lock.json/tasks/frontend/tasks/tasks.html?_ijt=ffd71vq723vuciusi5aaauk7td"
+
     let body = {
         login: loginEnter.value,
         password: passwordEnter.value,
@@ -42,13 +43,12 @@ formEnter.onsubmit = (evt) => {
     requestToServer(body, "post").then((data) => {
         if (data["data"] === null) {
             wrongData.hidden = false
-            console.log(null)
         } else {
             wrongData.hidden = true
             if (data["data"][1]) {
-                console.log("admin")
                 href =
-                    "http://localhost:63342/package-lock.json/%D0%9A%D0%9E%D0%94/fullstack_project/tasksList/tasks/frontend/admin_page/admin.html?_ijt=unvihj9cg7he5bejc0elv1bqgk"
+                    "http://localhost:63342/package-lock.json/tasks/frontend/admin_page/admin.html?_ijt=m57c72n8fm5bosctnpjjius8sc"
+
                 document.location["href"] = href
             } else {
                 document.location["href"] = href

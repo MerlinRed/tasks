@@ -1,58 +1,52 @@
+const url = "http://localhost:5000/"
+
 let list = document.querySelector(".todo-list")
+
+let taskTemplate = document.querySelector("#users-template").content
+let newItemTemplate = taskTemplate.querySelector(".list-user")
+
 let inputPost = document.querySelector(".todo-input-post")
 let formPost = document.querySelector(".todo-post")
 
-let inputPutDescription = document.querySelector(".todo-input-put-desc")
-let inputPutTasksId = document.querySelector(".todo-input-put-id")
-let formPut = document.querySelector(".todo-put")
-
-let inputDelete = document.querySelector(".todo-input-delete")
-let formDelete = document.querySelector(".todo-delete")
-
-const url = "http://localhost:5000/"
+let modalText = document.querySelector(".todo-input-text")
+let buttonModalSaveText = document.querySelector(".btn-save")
 
 let idAndDescription = []
 
 let userId
 
 function fetchGet() {
+    let body = {
+        get: true,
+    }
     fetch(url, {
-        method: "get",
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
     }).then((data) => {
         data.json().then((data) => {
-            let all_data = Array(data)[0]["data"]
-            for (let task of all_data) {
+            let allData = Array(data)[0]["data"]
+            for (let task of allData) {
                 idAndDescription.push(task)
             }
         })
     })
 }
 
-async function fetchPost(body) {
+async function fetchRequest(body, method) {
     const response = await fetch(url, {
-        method: "post",
+        method: method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
     })
     return await response.json()
 }
 
-async function fetchPut(body) {
-    const response = await fetch(url, {
-        method: "put",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-    })
-    return await response.json()
-}
-
-async function fetchDelete(body) {
-    const response = await fetch(url, {
-        method: "delete",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-    })
-    return await response.json()
+function addNewTask(task) {
+    let newTask = newItemTemplate.cloneNode(true)
+    let taskDescription = newTask.querySelector(".todo-text")
+    taskDescription.textContent = task
+    return [newTask, taskDescription.textContent]
 }
 
 window.onload = () => {
@@ -65,70 +59,86 @@ window.onload = () => {
         body: JSON.stringify(body),
     }).then((data) => {
         data.json().then((data) => {
-            let all_data = Array(data)[0]["data"]
-            for (let task of all_data) {
-                idAndDescription.push(task)
-                let newTask = document.createElement("li")
-                newTask.textContent = task[1]
+            let allData = Array(data)[0]["data"]
+            for (let task of allData) {
+                let returnedTask = addNewTask(task[1])
+                let newTask = returnedTask[0]
+                let descriptionTask = returnedTask[1]
+                deleteTask(task[0], newTask)
+                updateTask(task[0], newTask, descriptionTask)
                 list.append(newTask)
-                inputPost.value = ""
             }
-            userId = data["users_id"][0]
+            userId = data["users_id"]
         })
     })
 }
 
 formPost.onsubmit = (event) => {
     event.preventDefault()
-    let newTask = document.createElement("li")
     let value = inputPost.value
-    newTask.textContent = value
+    let returnedTask = addNewTask(value)
+    let newTask = returnedTask[0]
+    let descriptionTask = returnedTask[1]
     list.append(newTask)
     let body = {
         description: value,
         get: false,
         users_id: userId,
     }
-    console.log(body)
-    fetchPost(body)
-        .then((data) => console.log(data))
+    fetchRequest(body, "post")
+        .then((data) => {
+            console.log(data)
+            fetchGet()
+        })
         .catch((error) => console.log(`Error POST request ${error}`))
     inputPost.value = ""
+    let index = searchElements(descriptionTask)
+    updateTask(index, newTask, descriptionTask)
+    deleteTask(index, newTask)
 }
 
-formPut.onsubmit = (event) => {
-    event.preventDefault()
-    let description = inputPutDescription.value
-    let tasksId = Number(inputPutTasksId.value) - 1
-    let tagLiDescription = document.querySelectorAll("li")
-    for (let desc of idAndDescription) {
-        if (desc[1] === tagLiDescription.item(tasksId).textContent) {
-            tagLiDescription.item(tasksId).textContent = description
-            console.log(desc[0])
+function searchElements(descriptionTask) {
+    console.log(idAndDescription)
+
+    /* if (descriptionTask == index[1]) {
+            return index[0]
+        } */
+}
+
+function updateTask(index, item, text) {
+    let buttonPut = item.querySelector(".btn-put")
+    buttonPut.onclick = () => {
+        modalText.value = text
+        buttonModalSaveText.onclick = () => {
+            let taskDescription = item.querySelector(".todo-text")
+            let description = modalText.value
+            taskDescription.textContent = description
+
             let body = {
                 description: description,
-                tasks_id: desc[0],
+                tasks_id: index,
             }
-            fetchPut(body)
-                .then((data) => console.log(data))
+            console.log(body)
+            fetchRequest(body, "put")
+                .then((data) => {
+                    console.log(data)
+                    fetchGet()
+                })
                 .catch((error) => console.log(`Error Put request ${error}`))
         }
     }
-    fetchGet()
 }
 
-formDelete.onsubmit = (event) => {
-    event.preventDefault()
-    let tasksId = Number(inputDelete.value) - 1
-    let tagLiDescription = document.querySelectorAll("li")
-    for (let desc of idAndDescription) {
-        if (desc[1] === tagLiDescription.item(tasksId).textContent) {
-            tagLiDescription.item(tasksId).remove()
-            let body = { tasks_id: desc[0] }
-            fetchDelete(body)
-                .then((data) => console.log(data))
-                .catch((error) => console.log(`Error Delete request ${error}`))
-        }
+let deleteTask = (index, item) => {
+    let buttonDelete = item.querySelector(".btn-delete")
+    buttonDelete.onclick = () => {
+        item.remove()
+        let body = { tasks_id: index }
+        fetchRequest(body, "delete")
+            .then((data) => {
+                console.log(data)
+                fetchGet()
+            })
+            .catch((error) => console.log(`Error Delete request ${error}`))
     }
-    fetchGet()
 }
