@@ -13,8 +13,6 @@ let newItemTemplate = usersTemplate.querySelector(".list-user")
 
 let openTasksPage = document.querySelector(".open-tasks-page")
 
-let userId
-
 async function requestToServer(body, method) {
     const response = await fetch(url, {
         method: method,
@@ -37,13 +35,18 @@ window.onload = () => {
             let all_data = Array(data)[0]["users"]
             for (let user of all_data) {
                 let userName = newItemTemplate.cloneNode(true)
-                let userNameText = userName.querySelector("span")
+                let userNameText = userName.querySelector(".user-name")
+                let userStatusText = userName.querySelector(".user-status")
                 userNameText.textContent = user[1]
+                if (user[3]) {
+                    userStatusText.textContent = " - admin"
+                } else {
+                    userStatusText.textContent = " - user"
+                }
                 removeUser(user[0], userName)
                 list.append(userName)
             }
-            userId = data["users_id"]
-            console.log(userId)
+            let userId = data["users_id"]
             if (userId == 1) {
                 formUpdateUser.hidden = false
                 formRemoveFromAdmin.hidden = false
@@ -63,24 +66,35 @@ let removeUser = (index, item) => {
     }
 }
 
+function searchAndChangeElement(status, name) {
+    userStatus = list.children
+    for (let text of userStatus) {
+        if (name == text["childNodes"][1]["children"][0]["lastChild"]["data"]) {
+            text["childNodes"][1]["children"][1].textContent = ` - ${status}`
+        }
+    }
+}
+
 formUpdateUser.onsubmit = (event) => {
     event.preventDefault()
-    let newAdmin = inputLogin.value
+    let newAdmin = inputLogin.value.trim()
     let body = {
         update: true,
         admin: newAdmin,
     }
     requestToServer(body, "put").then((data) => console.log(data))
+    searchAndChangeElement("admin", newAdmin)
 }
 
 formRemoveFromAdmin.onsubmit = (event) => {
     event.preventDefault()
-    let removeAdmin = inputAdmin.value
+    let removeAdmin = inputAdmin.value.trim()
     let body = {
         update: false,
         admin: removeAdmin,
     }
     requestToServer(body, "put").then((data) => console.log(data))
+    searchAndChangeElement("user", removeAdmin)
 }
 
 openTasksPage.onclick = (event) => {

@@ -10,13 +10,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 UsersID = 0
 
 
-@app.route('/', methods=['GET'])
-@cross_origin()
-def get():
-    data = TasksDB.select_data_from_db(users_id=UsersID)
-    return jsonify({'data': [tasks for tasks in data], 'users_id': UsersID})
-
-
 @app.route('/', methods=['POST'])
 @cross_origin()
 def post():
@@ -25,7 +18,7 @@ def post():
     if 'user' in content:
         if content['user']:
             UsersDB.registration(login=content['login'].strip(), password=content['password'].strip(),
-                                 user=content['user'].strip())
+                                 user=content['user'])
             return jsonify({'registration': True, 'user': content['login']}), 201
         else:
             # достаем юзера и смотрим админ ли он, чтобы в registr.js отправить его на нужный сайт
@@ -52,8 +45,8 @@ def put():
         if content['update']:
             UsersDB.update_users_to_admin(login=content['admin'])
         else:
-            data = UsersDB.remove_from_admins(login=content['admin'])
-            return jsonify({'transaction': 'successfully', 'updated': content, 'data': data})
+            UsersDB.remove_from_admins(login=content['admin'])
+            return jsonify({'transaction': 'successfully', 'updated': content})
     else:
         TasksDB.update_data_in_db(new_description=content['description'], tasks_id=content['tasks_id'])
     return jsonify({'transaction': 'successfully', 'updated': content})

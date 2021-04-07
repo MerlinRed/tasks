@@ -61,14 +61,18 @@ class UsersDataBase:
         try:
             if users_id != 1:
                 self.__cursor.execute(
-                    """SELECT users_id, login FROM users WHERE super_admin = false and admin_site = false""", )
+                    """SELECT users_id, login, user_site, admin_site 
+                       FROM users 
+                       WHERE super_admin = false and admin_site = false""", )
                 self.__connection.commit()
                 fetch = self.__cursor.fetchall()
                 data = [users for users in fetch]
                 return data
             else:
                 self.__cursor.execute(
-                    """SELECT users_id, login FROM users WHERE super_admin = false ORDER BY users_id ASC""")
+                    """SELECT users_id, login, user_site, admin_site 
+                       FROM users 
+                       WHERE super_admin = false ORDER BY users_id ASC""")
                 self.__connection.commit()
                 fetch = self.__cursor.fetchall()
                 data = [users for users in fetch]

@@ -1,55 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link href="admin_style.css" rel="stylesheet">
-    <title>Title</title>
-</head>
-<body>
-<div class="container">
+      <link href="admin_style.css" rel="stylesheet">
+      <title>Title</title>
+  </head>
+  <body>
+  <div class="container">
 
-    <h1 class="users">Список пользователей</h1>
+      <h1 class="users">Список пользователей</h1>
 
-    <div class="row">
-        <div class="col-md-4"></div>
-        <ol class="users-list col-md-4"></ol>
-        <div class="col-md-4"></div>
-    </div>
+      <div class="row">
+          <div class="col-md-4"></div>
+          <ol class="users-list col-md-4"></ol>
+          <div class="col-md-4"></div>
+      </div>
 
-    <form class="post-request" hidden="true">
-        <input type="text" class="input-post" id="input-post" required>
-    </form>
+      <form class="post-request" hidden="true">
+          <input type="text" class="form-control input-post" id="input-post" required>
+      </form>
 
-    <form class="user-to-admin" hidden="true">
-      <input type="text" class="input-login" id="input-login" placeholder=" Введите логин" required>
-      <button class="button-update" type="submit">Добавить админа</button>
-    </form>
+      <div class="form-group row">
+          <form class="user-to-admin" hidden="true">
+            <input type="text" class="form-control input-login" id="input-login" placeholder=" Введите логин" required>
+            <button class="btn btn-outline-primary button-update" type="submit">Добавить админа</button>
+          </form>
 
-    <form class="remove-from-admin" hidden="true">
-      <input type="text" class="input-admin" id="input-admin" placeholder=" Введите логин" required>
-      <button class="button-remove" type="submit">Убрать админа</button>
-    </form>
+          <form class="remove-from-admin" hidden="true">
+            <input type="text" class="form-control input-admin" id="input-admin" placeholder=" Введите логин" required>
+            <button class="btn btn-outline-primary button-remove" type="submit">
+              Убрать админа
+            </button>
+          </form>
+     </div>
 
-    <button class="open-tasks-page" type="submit">Задачи</button>
+      <button class="btn btn-primary open-tasks-page" type="submit">Задачи</button>
 
-    <template id="users-template">
-        <li class="list-user">
-          <label>
-            <span></span>
-            <button type="button" class="btn btn-primary delete-user" style="background-color:peru ;">&#10006;</button>
-          </label>
-        </li>
-    </template>
+      <template id="users-template">
+          <li class="list-user">
+            <label>
+              <span class="user-name"></span>
+              <span class="user-status"></span>
+              <button type="button" class="btn btn-outline-primary delete-user">
+                &#10006;
+              </button>
+            </label>
+          </li>
+      </template>
 
+  </div>
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+      
+      <script src="admin_script.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-     
-    <script src="admin_script.js"></script>
-
-</body>
+  </body>
 </html>

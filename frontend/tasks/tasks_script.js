@@ -98,11 +98,7 @@ formPost.onsubmit = (event) => {
 }
 
 function searchElements(descriptionTask) {
-    console.log(idAndDescription)
-
-    /* if (descriptionTask == index[1]) {
-            return index[0]
-        } */
+    console.log(idAndDescription[0])
 }
 
 function updateTask(index, item, text) {

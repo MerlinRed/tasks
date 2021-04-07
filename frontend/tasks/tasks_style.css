@@ -4,55 +4,81 @@
 
 body {
     background-color: #a3e4ff;
-    background-image: url("https://million-wallpapers.ru/wallpapers/6/34/490010652699558/les-osenyu-cveta.jpg");
+    background-image: url("https://lookw.ru/9/923/1566939771-spring-1920x10807.jpg");
+    background-size: 100%;
 }
 
 .container {
-    background-color: rgba(255, 150, 150, 0.8);
+    background-color: rgba(219, 147, 147, 0.8);
     text-align: center;
     margin-top: 150px;
     border-radius: 15px;
 }
 
 .tasks-list {
-    font-family: 'Bookman Old Style', sans-serif;
+    font-family: "Bookman Old Style", sans-serif;
     border-radius: 15px;
 }
 
-li {
+dt {
     background-color: rgba(255, 255, 255, 0.2);
-    font-family: "Baskerville Old Face", sans-serif;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
     font-style: italic;
     font-size: large;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .todo-post {
-    margin-left: 160px;
-    padding-top: 10px;
-}
-
-.todo-put {
-    margin-right: 35px;
-    padding-top: 10px;
-    padding-bottom: 15px;
+    display: flex;
+    margin-left: 387px;
+    padding-bottom: 10px;
 }
 
 label {
-    font-family: "Baskerville Old Face", sans-serif;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
     font-weight: bold;
     font-size: large;
 }
 
-input {
-    background-color: #e9c3c3;
-    border-radius: 15px;
+.button-post {
+    transition: all 0.9 ease;
+    background-color: rgb(26, 219, 194);
+    color: #000;
 }
 
-.btn-primary {
-    font-family: "Baskerville Old Face", sans-serif;
-    background-color: #d98080;
-    border-radius: 15px;
-    max-width: 100%;
-    height: auto;
+.button-post:hover {
+    transform: scale(1.03);
+    background-color: rgb(26, 219, 194);
 }
+
+.btn-put {
+    position: absolute;
+    right: 0px;
+    transition: all 0.9 ease;
+    background-color: yellowgreen;
+    color: #000;
+    height: 35px;
+}
+
+.btn-put:hover {
+    transform: scale(1.03);
+    background-color: gold;
+}
+
+.btn-delete {
+    position: absolute;
+    left: 0px;
+    transition: all 0.9 ease;
+    background-color: gray;
+    color: #000;
+    height: 35px;
+}
+
+.btn-delete:hover {
+    transform: scale(1.03);
+    background-color: gray;
+}
+

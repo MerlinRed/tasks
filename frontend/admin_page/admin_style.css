@@ -1,0 +1,90 @@
+.selector-for-some-widget {
+    box-sizing: content-box;
+}
+
+body {
+    background-color: #7ebae2;
+    background-image: url("https://w-dog.ru/wallpapers/2/4/461318047717931/xejan-jingu-kyoto-yaponiya-xram-xejan-kioto-ozero-prud-vesna-park-derevya-sakura-otrazhenie.jpg");
+    background-size: 100%;
+}
+
+.container {
+    background-color: rgba(122, 120, 85, 0.8);
+    text-align: center;
+    margin-top: 150px;
+    border-radius: 15px;
+}
+
+.users {
+    font-family: "Bookman Old Style", sans-serif;
+    border-radius: 15px;
+}
+
+li {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+    font-style: italic;
+    font-size: large;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.delete-user {
+    position: absolute;
+    right: 0px;
+    vertical-align: middle;
+    height: 35px;
+    background-color: peru;
+    color: red;
+    transition: all 0.9 ease;
+}
+
+.delete-user:hover {
+    transform: scale(1.03);
+    background-color: peru;
+}
+
+.button-update {
+    transition: all 0.9 ease;
+    color: black;
+    background-color: rgb(202, 228, 159);
+}
+
+.button-update:hover {
+    transform: scale(1.03);
+    background-color: rgb(202, 228, 159);
+}
+
+.button-remove {
+    transition: all 0.9 ease;
+    color: black;
+    background-color: #a16d56;
+}
+
+.button-remove:hover {
+    transform: scale(1.03);
+    background-color: #a16d56;
+}
+
+.open-tasks-page {
+    color: black;
+    background-color: rgb(248, 244, 0);
+}
+
+.open-tasks-page:hover {
+    transition: all 0.9 ease;
+    transform: scale(1.03);
+    background-color: rgb(248, 244, 0);
+}
+
+form {
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+}
+
+.open-tasks-page {
+    margin-bottom: 10px;
+}
