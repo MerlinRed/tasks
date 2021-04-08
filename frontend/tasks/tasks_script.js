@@ -11,26 +11,27 @@ let formPost = document.querySelector(".todo-post")
 let modalText = document.querySelector(".todo-input-text")
 let buttonModalSaveText = document.querySelector(".btn-save")
 
-let idAndDescription = []
-
 let userId
 
-function fetchGet() {
+async function fetchGet() {
+
+    let idAndDescription = []
+
     let body = {
-        get: true,
+        return_task: true,
+        users_id: userId,
     }
-    fetch(url, {
+    const response = await fetch(url, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
-    }).then((data) => {
-        data.json().then((data) => {
-            let allData = Array(data)[0]["data"]
-            for (let task of allData) {
-                idAndDescription.push(task)
-            }
-        })
     })
+    const jsonRespone = await response.json()
+    const arrayResponse = await Array(jsonRespone)[0]["data"]
+    for (let task of arrayResponse){
+        idAndDescription.push(task)
+    }
+    return idAndDescription
 }
 
 async function fetchRequest(body, method) {
@@ -85,20 +86,25 @@ formPost.onsubmit = (event) => {
         get: false,
         users_id: userId,
     }
-    fetchRequest(body, "post")
-        .then((data) => {
-            console.log(data)
-            fetchGet()
-        })
-        .catch((error) => console.log(`Error POST request ${error}`))
     inputPost.value = ""
-    let index = searchElements(descriptionTask)
-    updateTask(index, newTask, descriptionTask)
-    deleteTask(index, newTask)
+
+    fetchRequest(body, "post")
+        .then((data) => console.log(data))
+        .catch((error) => console.log(`Error POST request ${error}`))
+
+    fetchGet().then(data => {
+        let index = searchElement(descriptionTask, data)
+        updateTask(index, newTask, descriptionTask)
+        deleteTask(index, newTask)
+    })
 }
 
-function searchElements(descriptionTask) {
-    console.log(idAndDescription[0])
+function searchElement(newTask, taskArray) {
+    for (let task of taskArray){
+        if (newTask === task[1]){
+            return task[0]
+        }
+    }
 }
 
 function updateTask(index, item, text) {
@@ -116,11 +122,9 @@ function updateTask(index, item, text) {
             }
             console.log(body)
             fetchRequest(body, "put")
-                .then((data) => {
-                    console.log(data)
-                    fetchGet()
-                })
+                .then((data) => console.log(data))
                 .catch((error) => console.log(`Error Put request ${error}`))
+            fetchGet()                
         }
     }
 }
@@ -131,10 +135,8 @@ let deleteTask = (index, item) => {
         item.remove()
         let body = { tasks_id: index }
         fetchRequest(body, "delete")
-            .then((data) => {
-                console.log(data)
-                fetchGet()
-            })
+            .then((data) => console.log(data))
             .catch((error) => console.log(`Error Delete request ${error}`))
+        fetchGet()
     }
 }
