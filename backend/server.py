@@ -25,16 +25,19 @@ def post():
             data = UsersDB.select_user(login=content['login'].strip(), password=content['password'].strip())
             UsersID = data[0] if data is not None else None
             return jsonify({'data': data}), 201
-    if 'get' in content:
+    elif 'get' in content:
         if content['get']:
             data = TasksDB.select_data_from_db(users_id=UsersID)
             return jsonify({'data': [tasks for tasks in data], 'users_id': UsersID}), 201
         else:
             TasksDB.insert_data_in_db(description=content['description'], users_id=content['users_id'])
             return jsonify({'transaction': 'successfully'}), 201
-    if 'users_list' in content:
+    elif 'users_list' in content:
         data = UsersDB.select_all_users(UsersID)
         return jsonify({'users': [users for users in data], 'users_id': UsersID}), 201
+    elif 'return_task' in content:
+        data = TasksDB.select_data_from_db(users_id=content['users_id'])
+        return jsonify({'data': [tasks for tasks in data]}), 201
 
 
 @app.route('/', methods=['PUT'])

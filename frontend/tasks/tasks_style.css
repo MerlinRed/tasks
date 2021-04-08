@@ -82,3 +82,14 @@ label {
     background-color: gray;
 }
 
+.modal-content {
+    background-color: rgb(190, 124, 143);
+}
+
+.modal-header {
+    background-color: rgb(133, 130, 130);
+}
+
+.close {
+    color: white;
+}
