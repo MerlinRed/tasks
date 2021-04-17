@@ -100,7 +100,7 @@ formRemoveFromAdmin.onsubmit = (event) => {
 openTasksPage.onclick = (event) => {
     event.preventDefault()
     let href =
-        "http://localhost:63342/package-lock.json/tasks/frontend/tasks/tasks.html?_ijt=ffd71vq723vuciusi5aaauk7td"
+        "http://localhost:63342/server.py/tasks/frontend/tasks/tasks.html?_ijt=p850sgddqvqgoq7hfkjeccpm2g"
 
     document.location["href"] = href
 }
